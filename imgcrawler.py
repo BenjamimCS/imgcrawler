@@ -3,8 +3,6 @@ from bs4 import BeautifulSoup
 
 # Get URL from HTML files and save in txt files
 # and let it up to shell
-# use it for local files (to not forget):
-# html_file = open('./index.html', 'rt')
 # Precedence order:
 #   1. command-line
 #   2. json file
@@ -42,8 +40,3 @@ def get():
     o.write(response.content)
 get()
 
-
-# for element in soup.find_all('img'):
-#   url = element['src']
-#   os.system(f'cd ./downloads; wget {element["src"]}')
-# print(f'curl {url}')
