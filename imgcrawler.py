@@ -39,9 +39,12 @@ replace      = config['replace']
 local        = config['local']
 local_file   = config['local_file']
 
-dirname      = os.path.dirname(site)
-response     = requests.get(site)
-html_content = response.text
+if local:
+  html_content = open(config['local_file'], 'rb')
+else:
+  response     = requests.get(site)
+  html_content = response.text
+
 soup         = BeautifulSoup(html_content, 'html.parser')
 sources      = [] # store all the images sources
 
