@@ -23,6 +23,14 @@ config = {
   'savedir':'',
 }
 
+try:
+  settingsjson = json.load(open('setup.json'))
+  for i in settingsjson:
+    config[i] = settingsjson[i]
+  del settingsjson
+except FileNotFoundError:
+  pass
+
 site         = (input("Website: ")       or config['site']) # input("Website: ")
 newdirname   = (input("Real URL: ")      or config['dirname'])
 savedir      = (input("Save location: ") or config['savedir'])
