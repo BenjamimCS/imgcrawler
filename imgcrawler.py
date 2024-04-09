@@ -35,6 +35,9 @@ site         = (input("Website: ")       or config['site']) # input("Website: ")
 newdirname   = (input("Real URL: ")      or config['dirname'])
 savedir      = (input("Save location: ") or config['savedir'])
 selector     = (input("Query for (any CSS selector for an <img>): ") or config["query"])
+replace      = config['replace']
+local        = config['local']
+local_file   = config['local_file']
 
 dirname      = os.path.dirname(site)
 response     = requests.get(site)
