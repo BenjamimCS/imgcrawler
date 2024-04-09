@@ -13,7 +13,15 @@ from bs4 import BeautifulSoup
 #     -w or --site (site url)
 #     -u or --url  (URL to get)
 #     -p or --path (path for the image)
-config = json.load(open('setup.json'))
+config = {
+  'local': False,
+  'replace': False,
+  'site': '',
+  'local_file': '',
+  'dirname': '',
+  'query': '',
+  'savedir':'',
+}
 
 site         = (input("Website: ")       or config['site']) # input("Website: ")
 newdirname   = (input("Real URL: ")      or config['dirname'])
