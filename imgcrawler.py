@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 #     -p or --path (path for the image)
 config = {
   'local': False,
-  'replace': False,
+  'replace': [],
   'site': '',
   'local_file': '',
   'dirname': '',
@@ -56,8 +56,14 @@ def get():
     os.makedirs(savedir, exist_ok=True)
 
   for file in sources:
+    if replace:
+      try:
+        for s in replace:
+          file = file.replace(s[0], s[1])
+      except KeyError:
+        pass # implement error
     basename = os.path.basename(file)
-    response = requests.get(f"{newdirname}/{basename}")
+    response = requests.get(file)
     o        = open(file=f"{savedir}/{basename}", mode='wb')
     o.write(response.content)
 get()
