@@ -40,15 +40,15 @@ local        = config['local']
 local_file   = config['local_file']
 
 if local:
-  html_content = open(config['local_file'], 'rb')
+  html = open(config['local_file'], 'rb')
 else:
   response     = requests.get(site)
-  html_content = response.text
+  html = response.text
 
-soup         = BeautifulSoup(html_content, 'html.parser')
+dom         = BeautifulSoup(html, 'html.parser')
 sources      = [] # store all the images sources
 
-for element in soup.select(selector):
+for element in dom.select(selector):
   sources.append(element['src'])
 
 def get():
