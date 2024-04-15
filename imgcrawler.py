@@ -19,7 +19,7 @@ config = {
   'site': '',
   'local_file': '',
   'dirname': '',
-  'query': '',
+  'query': 'img',
   'savedir':'',
 }
 
