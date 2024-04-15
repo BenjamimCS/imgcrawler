@@ -1,4 +1,6 @@
-import os,json,requests
+import os
+import json
+import requests
 from bs4 import BeautifulSoup
 
 # Get URL from HTML files and save in txt files
