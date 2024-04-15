@@ -2,6 +2,7 @@ import os
 import json
 import requests
 from bs4 import BeautifulSoup
+from utils.url  import *
 
 # Get URL from HTML files and save in txt files
 # and let it up to shell
@@ -64,6 +65,8 @@ def get():
           file = file.replace(s[0], s[1])
       except KeyError:
         pass # implement error
+
+    if not isurl(file): file = makeurl(site=site,path=file)
     basename = os.path.basename(file)
     response = requests.get(file)
     o        = open(file=f"{savedir}/{basename}", mode='wb')
