@@ -2,6 +2,7 @@ import os
 import json
 import requests
 from bs4 import BeautifulSoup
+from utils.char import *
 from utils.url  import *
 
 # Get URL from HTML files and save in txt files
@@ -68,8 +69,10 @@ def get():
 
     if not isurl(file): file = makeurl(site=site,path=file)
     basename = os.path.basename(file)
+    basename = deletechar(r'\?.*',basename) or basename # remove any leading query string
     response = requests.get(file)
     o        = open(file=f"{savedir}/{basename}", mode='wb')
     o.write(response.content)
+
 get()
 
