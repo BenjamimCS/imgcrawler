@@ -52,8 +52,20 @@ else:
 dom         = BeautifulSoup(html, 'html.parser')
 sources      = [] # store all the images sources
 
-for element in dom.select(selector):
-  sources.append(element['src'])
+try:
+  for element in dom.select(selector):
+    # from docs: https://www.crummy.com/software/BeautifulSoup/bs4/doc/#miscellaneous
+    url = element.get('src')
+    if not url: url = element.get('href')
+    if not url: continue
+
+    urltest = deletechar(r'(\?|#).*', url)
+    # only the supported types by web browsers
+    isimg = re.search(r'\.(a?png|p?j(fif|pe?g?)|webp|gif|bmp|svg|avif|tiff?|ico)$', urltest)
+    if not isimg: continue
+    sources.append(url)
+except Exception:
+  pass
 
 def get():
   if not os.path.exists(savedir):
