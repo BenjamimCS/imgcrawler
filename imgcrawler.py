@@ -71,16 +71,18 @@ def get():
   if not os.path.exists(savedir):
     os.makedirs(savedir, exist_ok=True)
 
-  for url in sources:
-    if replace:
+  try:
+    for url in sources:
+      if replace:
         url = url.replace(replace[0], replace[1])
 
-    if not isurl(url): url = makeurl(site=site,path=url) # if there's just the path part
-    basename = os.path.basename(url)
-    basename = deletechar(r'\?.*',basename) or basename # remove any leading query string
-    response = requests.get(url)
-    o        = open(file=f"{savedir}/{basename}", mode='wb')
-    o.write(response.content)
+      if not isurl(url): url = makeurl(site=site,path=url) # if there's just the path part
+      basename = os.path.basename(url)
+      basename = deletechar(r'\?.*',basename) or basename # remove any leading query string
+      response = requests.get(url)
+      o        = open(file=f"{savedir}/{basename}", mode='wb')
+      o.write(response.content)
+  except KeyError: pass
 
 get()
 
