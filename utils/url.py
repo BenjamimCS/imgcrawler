@@ -20,7 +20,7 @@ def getprotocol(url:str) -> str:
   protocol = re.match(urlschemeregex, url, re.IGNORECASE)
   return protocol.group(1)
 
-def makeurl(site:str='', path:str = '', protocol:str = 'https'):
+def makeurl(site:str, path:str, protocol:str = 'https'):
   pattern = re.search(urlpathregex, site)
 
   if pattern:
