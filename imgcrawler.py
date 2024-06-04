@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from utils.char import *
 from utils.url  import *
+from utils.handlers import *
 
 # Get URL from HTML files and save in txt files
 # and let it up to shell
@@ -27,13 +28,8 @@ config = {
   'savedir':'',
 }
 
-try:
-  settingsjson = json.load(open('setup.json'))
-  for i in settingsjson:
-    config[i] = settingsjson[i]
-  del settingsjson
-except FileNotFoundError:
-  pass
+with readfile('setup.json', mode='rb') as json_file:
+  config = {**config,**json.load(json_file)}
 
 site         = (input("Website: ")       or config['site']) # input("Website: ")
 newdirname   = (input("Real URL: ")      or config['dirname'])
@@ -44,12 +40,13 @@ local        = config['local']
 local_file   = config['local_file']
 
 if local:
-  html = open(config['local_file'], 'rb')
+  with readfile(config['local_file'], 'rb') as html:
+    dom = BeautifulSoup(html, 'html.parser')
 else:
-  response     = requests.get(site)
+  response     = makerequest(requests.get,site)
   html = response.text
+  dom = BeautifulSoup(html, 'html.parser')
 
-dom         = BeautifulSoup(html, 'html.parser')
 sources      = [] # store all the images sources
 
 try:
@@ -79,9 +76,9 @@ def get():
       if not isurl(url): url = makeurl(site=site,path=url) # if there's just the path part
       basename = os.path.basename(url)
       basename = deletechar(r'\?.*',basename) or basename # remove any leading query string
-      response = requests.get(url)
-      o        = open(file=f"{savedir}/{basename}", mode='wb')
-      o.write(response.content)
+      response = makerequest(requests.get, url)
+      with readfile(file=f"{savedir}/{basename}", mode='wb') as outputfile:
+        outputfile.write(response.content)
   except KeyError: pass
 
 get()
