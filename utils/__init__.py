@@ -1,8 +1,1 @@
-__all__ = [
-   'match',
-   'deletechar',
-   'isurl',
-   'gethost',
-   'getprotocol',
-   'makeurl'
-]
+__all__ = ['char', 'url', 'handlers']
