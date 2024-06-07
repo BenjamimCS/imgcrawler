@@ -77,6 +77,7 @@ def get():
       basename = os.path.basename(url)
       basename = deletechar(r'\?.*',basename) or basename # remove any leading query string
       response = makerequest(requests.get, url)
+      if not response: continue # TODO: report error
       with readfile(file=f"{savedir}/{basename}", mode='wb') as outputfile:
         outputfile.write(response.content)
   except KeyError: pass
