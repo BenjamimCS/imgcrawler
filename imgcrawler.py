@@ -61,11 +61,7 @@ def get():
 
   for url in sources:
     if replace:
-      try:
-        for s in replace:
-          url = url.replace(s[0], s[1])
-      except KeyError:
-        pass # implement error
+        url = url.replace(replace[0], replace[1])
 
     if not isurl(url): url = makeurl(site=site,path=url) # if there's just the path part
     basename = os.path.basename(url)
