@@ -30,3 +30,17 @@ def makeurl(site:str, path:str, protocol:str = 'https'):
 def isroot(url:str) -> bool:
   if re.match('/', url): return True
   else: return False
+
+def basename(url:str) -> str:
+  """
+  Get the basename from an URL
+  If  :url: isn't a valid URL its value is returned
+  :url -> str: a valid URL
+  """
+  import os
+  from . import char
+  if not isurl(url): return url
+  urlbasename = os.path.basename(url)
+  urlbasename = char.deletechar(r'(\?|#).*', urlbasename)
+  if not urlbasename: pass # TODO: if empty return a random string with # at the beginning
+  return urlbasename
