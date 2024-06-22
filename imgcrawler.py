@@ -74,11 +74,10 @@ def get():
         url = url.replace(replace[0], replace[1])
 
       if not isurl(url): url = makeurl(site=site,path=url) # if there's just the path part
-      basename = os.path.basename(url)
-      basename = deletechar(r'\?.*',basename) or basename # remove any leading query string
+      filename = basename(url)
       response = makerequest(requests.get, url)
       if not response: continue # TODO: report error
-      with readfile(file=f"{savedir}/{basename}", mode='wb') as outputfile:
+      with readfile(file=f"{savedir}/{filename}", mode='wb') as outputfile:
         outputfile.write(response.content)
   except KeyError: pass
 
