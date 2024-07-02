@@ -61,6 +61,9 @@ try:
     isimg = re.search(r'\.(a?png|p?j(fif|pe?g?)|webp|gif|bmp|svg|avif|tiff?|ico)$', urltest)
     if not isimg: continue
     sources.append(url)
+    if replace:
+      url = url.replace(replace[0], replace[1])
+
 except Exception:
   pass
 
@@ -70,9 +73,6 @@ def get():
 
   try:
     for url in sources:
-      if replace:
-        url = url.replace(replace[0], replace[1])
-
       if not isurl(url): url = makeurl(site=site,path=url) # if there's just the path part
       filename = basename(url)
       response = makerequest(requests.get, url)
