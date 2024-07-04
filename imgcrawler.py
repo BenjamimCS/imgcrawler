@@ -1,10 +1,12 @@
 import os
 import json
 import requests
+import re
 from bs4 import BeautifulSoup
 from utils.char import *
 from utils.url  import *
 from utils.handlers import *
+from uuid import uuid4
 
 # Get URL from HTML files and save in txt files
 # and let it up to shell
@@ -68,6 +70,11 @@ except Exception:
   pass
 
 def get():
+  global savedir
+  if not savedir:
+    if dom.title: savedir = dom.title.string
+    else: savedir = str(uuid4())
+
   if not os.path.exists(savedir):
     os.makedirs(savedir, exist_ok=True)
 
