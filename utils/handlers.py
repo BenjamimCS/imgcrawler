@@ -1,3 +1,5 @@
+__all__ = ['makerequest', 'readfile']
+
 def makerequest(func, *args, **kwargs):
   """
   Requests's module wrapper. Handles possible exceptions

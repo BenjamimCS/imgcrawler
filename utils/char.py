@@ -1,4 +1,5 @@
 import re
+__all__ = ['match']
 
 def match(pattern:str, string:str) -> str | None:
   """

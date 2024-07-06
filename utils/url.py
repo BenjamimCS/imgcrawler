@@ -1,5 +1,8 @@
 import re
 
+__all__ = [  'isurl',  'gethost', 'getprotocol',
+           'makeurl',  'isroot' ,    'basename']
+
 urlschemeregex = r'(\w+)'
 urlpathregex = r'(\/.*)?'
 urlauthorityregex = r'\/\/((?:[a-z0-9%]+\.)?[a-z0-9%]+(?:\.[a-z]+)+)' # before path of scheme-specific-part
