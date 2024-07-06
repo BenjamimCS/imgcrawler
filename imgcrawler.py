@@ -58,7 +58,7 @@ try:
     if not url: url = element.get('href')
     if not url: continue
 
-    urltest = deletechar(r'(\?|#).*', url)
+    urltest = re.sub(r'(\?|#).*', '', url)
     # only the supported types by web browsers
     isimg = re.search(r'\.(a?png|p?j(fif|pe?g?)|webp|gif|bmp|svg|avif|tiff?|ico)$', urltest)
     if not isimg: continue

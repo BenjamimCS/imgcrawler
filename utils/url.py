@@ -41,9 +41,8 @@ def basename(url:str) -> str:
   :url -> str: a valid URL
   """
   import os
-  from . import char
   if not isurl(url): return url
   urlbasename = os.path.basename(url)
-  urlbasename = char.deletechar(r'(\?|#).*', urlbasename)
+  urlbasename = re.sub(r'(\?|#).*', '', urlbasename)
   if not urlbasename: pass # TODO: if empty return a random string with # at the beginning
   return urlbasename
