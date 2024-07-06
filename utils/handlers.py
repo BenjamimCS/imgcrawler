@@ -19,17 +19,20 @@ def makerequest(func, *args, **kwargs):
   except requests.exceptions.Timeout: pass
   except Exception: pass
 
-def readfile(*args,**kwargs):
+def readfile(*args,report:bool=False, reportmsg={'failure': "file not found"}, **kwargs):
   """
   open's functon wrapper. Handles possible exceptions
   :*args: positional arguments
+  :*report* -> bool: enable logging
+  :*reportmsg* -> str: custom logging message
   :**kwargs: keyowrd arguments
   """
+  import io
   try:
     return open(*args,**kwargs)
   except FileNotFoundError:
-    pass
-    exit(1)
+    if report: print(reportmsg['failure'])
+    return io.StringIO("{}")
   except Exception as err:
     pass
     exit(1)
