@@ -28,6 +28,7 @@ config = {
   'dirname': '',
   'query': 'img',
   'savedir':'',
+  'attr': 'src'
 }
 
 with readfile('setup.json', mode='rb') as json_file:
@@ -40,6 +41,7 @@ selector     = (input("Query for (any CSS selector for an <img>): ") or config["
 replace      = config['replace']
 local        = config['local']
 local_file   = config['local_file']
+attr         = config['attr']
 
 if local:
   with readfile(config['local_file'], 'rb') as html:
@@ -54,9 +56,8 @@ sources      = [] # store all the images sources
 try:
   for element in dom.select(selector):
     # from docs: https://www.crummy.com/software/BeautifulSoup/bs4/doc/#miscellaneous
-    url = element.get('src')
-    if not url: url = element.get('href')
-    if not url: continue
+    if element.get(attr): url = element[attr]
+    else: continue
 
     urltest = re.sub(r'(\?|#).*', '', url)
     # only the supported types by web browsers
