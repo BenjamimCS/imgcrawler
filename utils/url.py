@@ -5,7 +5,7 @@ __all__ = [  'isurl',  'gethost', 'getprotocol',
 
 urlschemeregex = r'(\w+)'
 urlpathregex = r'(\/.*)?'
-urlauthorityregex = r'\/\/((?:[a-z0-9%]+\.)?[a-z0-9%]+(?:\.[a-z]+)+)' # before path of scheme-specific-part
+urlauthorityregex = r'\/\/((?:[a-z0-9%-_]+\.)?[a-z0-9%_-]+(?:\.[a-z]+)+)' # before path of scheme-specific-part
 urlregex = urlschemeregex + ':' + urlauthorityregex + urlpathregex
 
 def isurl(url:str) -> bool:
