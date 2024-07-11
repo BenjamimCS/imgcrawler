@@ -3,10 +3,10 @@ import re
 __all__ = [  'isurl',  'gethost', 'getprotocol',
            'makeurl',  'isroot' ,    'basename']
 
-URLSCHEMEREGEX = r'(\w+)'
+URLSCHEMEREGEX = r'^(\w+)'
 URLPATHREGEX = r'(\/.*)?'
-URLAUTHORITYREGEX = r'\/\/((?:[a-z0-9%-_]+\.)?[a-z0-9%_-]+(?:\.[a-z]+)+)' # before path of scheme-specific-part
-URLREGEX = URLSCHEMEREGEX + ':' + URLAUTHORITYREGEX + URLPATHREGEX
+URLAUTHORITYREGEX = r'((?:[a-z0-9%-_]+\.)?[a-z0-9%_-]+(?:\.[a-z]+)+)' # before path of scheme-specific-part
+URLREGEX = URLSCHEMEREGEX + '://' + URLAUTHORITYREGEX + URLPATHREGEX
 
 def isurl(url:str) -> bool:
   matches = re.fullmatch(URLREGEX, url)
