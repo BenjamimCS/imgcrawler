@@ -3,24 +3,24 @@ import re
 __all__ = [  'isurl',  'gethost', 'getprotocol',
            'makeurl',  'isroot' ,    'basename']
 
-urlschemeregex = r'(\w+)'
-urlpathregex = r'(\/.*)?'
-urlauthorityregex = r'\/\/((?:[a-z0-9%-_]+\.)?[a-z0-9%_-]+(?:\.[a-z]+)+)' # before path of scheme-specific-part
-urlregex = urlschemeregex + ':' + urlauthorityregex + urlpathregex
+URLSCHEMEREGEX = r'(\w+)'
+URLPATHREGEX = r'(\/.*)?'
+URLAUTHORITYREGEX = r'\/\/((?:[a-z0-9%-_]+\.)?[a-z0-9%_-]+(?:\.[a-z]+)+)' # before path of scheme-specific-part
+URLREGEX = URLSCHEMEREGEX + ':' + URLAUTHORITYREGEX + URLPATHREGEX
 
 def isurl(url:str) -> bool:
-  matches = re.fullmatch(urlregex, url)
+  matches = re.fullmatch(URLREGEX, url)
   if matches: return True
   else:       return False
 
 def gethost(url:str) -> str:
   if not isurl(url): raise ValueError('*url* is not a valid URL')
 
-  host = re.search(urlauthorityregex, url, re.IGNORECASE)
+  host = re.search(URLAUTHORITYREGEX, url, re.IGNORECASE)
   return host.group(1)
 
 def getprotocol(url:str) -> str:
-  protocol = re.match(urlschemeregex, url, re.IGNORECASE)
+  protocol = re.match(URLSCHEMEREGEX, url, re.IGNORECASE)
   return protocol.group(1)
 
 def makeurl(site:str, path:str, protocol:str = 'https') -> str | None:
