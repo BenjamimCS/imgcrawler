@@ -3,10 +3,10 @@ import re
 __all__ = [  'isurl',  'gethost', 'getprotocol',
            'makeurl',  'isroot' ,    'basename']
 
-URLSCHEMEREGEX = r'(\w+)'
+URLSCHEMEREGEX = r'^(\w+)'
 URLPATHREGEX = r'(\/.*)?'
-URLAUTHORITYREGEX = r'\/\/((?:[a-z0-9%-_]+\.)?[a-z0-9%_-]+(?:\.[a-z]+)+)' # before path of scheme-specific-part
-URLREGEX = URLSCHEMEREGEX + ':' + URLAUTHORITYREGEX + URLPATHREGEX
+URLAUTHORITYREGEX = r'((?:[a-z0-9%-_]+\.)?[a-z0-9%_-]+(?:\.[a-z]+)+)' # before path of scheme-specific-part
+URLREGEX = URLSCHEMEREGEX + '://' + URLAUTHORITYREGEX + URLPATHREGEX
 
 def isurl(url:str) -> bool:
   matches = re.fullmatch(URLREGEX, url)
@@ -23,27 +23,32 @@ def getprotocol(url:str) -> str:
   protocol = re.match(URLSCHEMEREGEX, url, re.IGNORECASE)
   return protocol.group(1)
 
-def makeurl(site:str, path:str, protocol:str = 'https') -> str | None:
+def makeurl(baseurl:str, path:str, protocol:str = 'https') -> str | None:
   """
-  Produce an URL with *path* if *site* exits. Return None instead
-  :site -> str: the reference URL
+  Produce an URL with *path* if *baseurl* exits. Return None instead
+  :baseurl -> str: the reference URL
   :path -> str: the path to be transformed
   :protocol -> str: an optional protocol for the final URL
   """
   import os
-  if not isurl(site): return path
+  if not isurl(baseurl): return path
+  QUERYSTRINGPATTERN = re.compile(r'(\?.+)')
+
+  host = os.path.dirname(baseurl)
+  if QUERYSTRINGPATTERN.search(baseurl):
+    querystring = QUERYSTRINGPATTERN.search(baseurl).group(1)
+  else: querystring = ''
 
   if protocol:
-    site = re.sub(r'^\w+:', f'{protocol}:', site)
-  host = os.path.dirname(site)
+    baseurl = re.sub(r'^\w+:', f'{protocol}:', baseurl)
+  host = os.path.dirname(baseurl)
   if re.search(r'^\./', path):
     path = re.sub(r'^\./', '/', path)
-    return f"{host}{path}"
+    return f"{host}{path}{querystring}"
   elif re.search(r'^/', path):
-    host = gethost(site)
-    return f"{protocol}://{host}{path}"
+    return f"{host}{path}{querystring}"
   else:
-    return f'{host}/{path}'
+    return f'{host}/{path}{querystring}'
 
 def isroot(url:str) -> bool:
   if re.match('/', url): return True
