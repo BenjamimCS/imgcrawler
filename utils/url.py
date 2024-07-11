@@ -23,24 +23,24 @@ def getprotocol(url:str) -> str:
   protocol = re.match(URLSCHEMEREGEX, url, re.IGNORECASE)
   return protocol.group(1)
 
-def makeurl(site:str, path:str, protocol:str = 'https') -> str | None:
+def makeurl(baseurl:str, path:str, protocol:str = '') -> str | None:
   """
-  Produce an URL with *path* if *site* exits. Return None instead
-  :site -> str: the reference URL
+  Produce an URL with *path* if *baseurl* exits. Return None instead
+  :baseurl -> str: the reference URL
   :path -> str: the path to be transformed
   :protocol -> str: an optional protocol for the final URL
   """
   import os
-  if not site: return
-  if not isurl(site): return path
+  if not baseurl: return
+  if not isurl(baseurl): return path
 
   site = re.sub(r'^\w+:', f'{protocol}:', site)
-  host = os.path.dirname(site)
+  host = os.path.dirname(baseurl)
   if re.search(r'^\./', path):
     path = re.sub(r'^\./', '/', path)
     return f"{host}{path}"
   elif re.search(r'^/', path):
-    host = gethost(site)
+    host = gethost(baseurl)
     return f"{protocol}://{host}{path}"
   else:
     return f'{host}/{path}'
