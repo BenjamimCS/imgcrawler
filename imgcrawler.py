@@ -58,6 +58,7 @@ try:
     # from docs: https://www.crummy.com/software/BeautifulSoup/bs4/doc/#miscellaneous
     if element.get(attr): url = element[attr]
     else: continue
+    if not isurl(url): url = makeurl(baseurl=site,path=url) # if there's just the path part
 
     urltest = re.sub(r'(\?|#).*', '', url)
     # only the supported types by web browsers
@@ -81,7 +82,6 @@ def get():
 
   try:
     for url in sources:
-      if not isurl(url): url = makeurl(site=site,path=url) # if there's just the path part
       filename = basename(url)
       response = makerequest(requests.get, url)
       if not response: continue # TODO: report error
