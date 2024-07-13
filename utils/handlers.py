@@ -1,24 +1,9 @@
+from .url import basename
 from tqdm import tqdm
 from typing import Callable
 __all__ = ['makerequest', 'readfile']
 
-def _reportget(response, filename:str):
-  total = int(response.headers.get('content-length'))
-  chunck = 8192
-  options = {
-    'desc': filename,
-    'total': total,
-    'unit': 'B',
-    'unit_scale': True,
-    'unit_divisor': 1024,
-    'position': 0,
-    'bar_format': '{desc}: {percentage:3.0f}% {bar} {n_fmt}B/{total_fmt}B [{elapsed}, {rate_fmt}]',
-    'leave': None
-  }
-
-  with tqdm(**options) as progressbar:
-    for c in response.iter_content(chunck):
-      progressbar.update(len(c))
+def _reportget(response, filename:str): pass
 
 
 readfileoptions = {
@@ -36,22 +21,44 @@ makerequestoptions = {
   'get': _reportget
 }
 
-def makerequest(func, *args, report=False, reportmsg:dict=makerequestoptions, filename:str="", **kwargs):
+def makerequest(sources:tuple[str]|list[str], output:str, log:bool=True):
   """
   Requests's module wrapper. Handles possible exceptions
-  :func -> function:
-  :*args: positional arguments
-  :**kwargs: keyowrd arguments
+  :sources -> tuple[str] | list[str]:
+  :output -> str:
+  :log -> str:
   """
   import requests
   try:
-    # TODO: raise exception if *func* isn't member of requets module
-    if not func in requests.__dict__: pass
+    if log:
+      options = {
+        'unit': 'B',
+        'unit_scale': True,
+        'unit_divisor': 1024,
+        'position': 0,
+        'bar_format': '{desc}: {percentage:3.0f}% {bar} {n_fmt}B/{total_fmt}B [{elapsed}, {rate_fmt}]',
+        'ncols': 100,
+        'leave': None
+      }
+      for url in sources:
+        filebasename = basename(url)
+        options['desc'] = filebasename
+        response = requests.get(url, stream=log)
+        response.raise_for_status()
+        options['total'] = int(response.headers.get('content-length'))
+        chunk = 8192
 
-    if report and kwargs.get('stream'):
-      response = func(*args, **kwargs)
-      reportmsg['get'](response, (filename or args[0]))
-    else: return func(*args, **kwargs)
+        with tqdm(**options) as progressbar:
+          for c in response.iter_content(chunk):
+            progressbar.update(len(c))
+            with open(f'{output}/{filebasename}', "ab+") as file:
+              file.write(c)
+    else:
+      for url in sources:
+        filebasename = basename(url)
+        response = requests.get(url, stream=log)
+        with open(f'{output}/{filebasename}', "ab+") as file:
+          file.write(response.content)
   except requests.exceptions.ConnectTimeout: pass
   except requests.exceptions.ConnectionError: pass
   except requests.exceptions.HTTPError: pass
