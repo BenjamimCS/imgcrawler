@@ -64,9 +64,9 @@ try:
     # only the supported types by web browsers
     isimg = re.search(r'\.(a?png|p?j(fif|pe?g?)|webp|gif|bmp|svg|avif|tiff?|ico)$', urltest)
     if not isimg: continue
-    sources.append(url)
     if replace:
       url = url.replace(replace[0], replace[1])
+    sources.append(url)
 
 except Exception:
   pass
