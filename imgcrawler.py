@@ -81,12 +81,7 @@ def get():
     os.makedirs(savedir, exist_ok=True)
 
   try:
-    for url in sources:
-      filename = basename(url)
-      response = makerequest(requests.get, url)
-      if not response: continue # TODO: report error
-      with readfile(file=f"{savedir}/{filename}", mode='wb') as outputfile:
-        outputfile.write(response.content)
+    makerequest(sources, savedir)
   except KeyError: pass
 
 get()
