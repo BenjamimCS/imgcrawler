@@ -21,7 +21,7 @@ makerequestoptions = {
   'get': _reportget
 }
 
-def makerequest(sources:tuple[str]|list[str], output:str, log:bool=True):
+def makerequest(*args,sources:tuple[str]|list[str]|str=(), output:str="", log:bool=True, **kwargs):
   """
   Requests's module wrapper. Handles possible exceptions
   :sources -> tuple[str] | list[str]:
@@ -30,6 +30,10 @@ def makerequest(sources:tuple[str]|list[str], output:str, log:bool=True):
   """
   import requests
   try:
+    if not output:
+      response = requests.get(*args, **kwargs)
+      response.raise_for_status()
+      return response
     if log:
       options = {
         'unit': 'B',
