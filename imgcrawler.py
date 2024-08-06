@@ -47,7 +47,7 @@ if local:
   with readfile(config['local_file'], 'rb') as html:
     dom = BeautifulSoup(html, 'html.parser')
 else:
-  response     = makerequest(requests.get,site)
+  response = makerequest(site)
   html = response.text
   dom = BeautifulSoup(html, 'html.parser')
 
@@ -83,7 +83,7 @@ def get():
     os.makedirs(savedir, exist_ok=True)
 
   try:
-    makerequest(sources, savedir)
+    makerequest(sources=sources, output=savedir)
   except KeyError: pass
 
 get()
