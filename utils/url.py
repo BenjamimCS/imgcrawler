@@ -3,6 +3,13 @@ import re
 __all__ = [  'isurl',  'gethost', 'getprotocol',
            'makeurl',  'isroot' ,    'basename']
 
+"""
+group 1: protocol
+group 2: host
+group 3: path
+TODO:
+  group 4: querystring
+"""
 URLSCHEMEREGEX = r'^(\w+)'
 URLPATHREGEX = r'(\/.*)?'
 URLAUTHORITYREGEX = r'((?:[a-z0-9%-_]+\.)?[a-z0-9%_-]+(?:\.[a-z]+)+)' # before path of scheme-specific-part
@@ -34,9 +41,15 @@ def makeurl(baseurl:str, path:str, protocol:str = 'https') -> str | None:
   if not isurl(baseurl): return path
   QUERYSTRINGPATTERN = re.compile(r'(\?.+)')
 
-  host = os.path.dirname(baseurl)
-  if QUERYSTRINGPATTERN.search(baseurl):
+  basepath = os.path.dirname(re.search(URLREGEX, baseurl).group(3) or '')
+  host     = gethost(baseurl)
+  if QUERYSTRINGPATTERN.search(path):
+    querystring = QUERYSTRINGPATTERN.search(path).group(1)
+    basepath    = QUERYSTRINGPATTERN.sub('', basepath)
+    path        = QUERYSTRINGPATTERN.sub('', path)
+  elif QUERYSTRINGPATTERN.search(baseurl):
     querystring = QUERYSTRINGPATTERN.search(baseurl).group(1)
+    basepath    = QUERYSTRINGPATTERN.sub('', basepath)
   else: querystring = ''
 
   if protocol:
@@ -44,11 +57,11 @@ def makeurl(baseurl:str, path:str, protocol:str = 'https') -> str | None:
   host = os.path.dirname(baseurl)
   if re.search(r'^\./', path):
     path = re.sub(r'^\./', '/', path)
-    return f"{host}{path}{querystring}"
+    return f'{protocol}://{host}{basepath or ""}{path}{querystring}'
   elif re.search(r'^/', path):
-    return f"{host}{path}{querystring}"
+    return f"{protocol}://{host}{path}{querystring}"
   else:
-    return f'{host}/{path}{querystring}'
+    return f'{protocol}://{host}{basepath or ""}/{path}{querystring}'
 
 def isroot(url:str) -> bool:
   if re.match('/', url): return True
