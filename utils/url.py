@@ -16,8 +16,8 @@ def isurl(url:str) -> bool:
 def gethost(url:str) -> str:
   if not isurl(url): raise ValueError('*url* is not a valid URL')
 
-  host = re.search(URLAUTHORITYREGEX, url, re.IGNORECASE)
-  return host.group(1)
+  host = re.search(URLREGEX, url, re.IGNORECASE)
+  return host.group(2)
 
 def getprotocol(url:str) -> str:
   protocol = re.match(URLSCHEMEREGEX, url, re.IGNORECASE)
