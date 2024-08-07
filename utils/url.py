@@ -35,18 +35,24 @@ def makeurl(baseurl:str, path:str, protocol:str = 'https') -> str | None:
   QUERYSTRINGPATTERN = re.compile(r'(\?.+)')
 
   baseurl = re.sub(r'^\w+:', f'{protocol}:', baseurl)
-  host = os.path.dirname(baseurl)
-  if QUERYSTRINGPATTERN.search(baseurl):
+  basepath = os.path.dirname(re.search(URLREGEX, baseurl).group(3) or '')
+  host     = gethost(baseurl)
+  if QUERYSTRINGPATTERN.search(path):
+    querystring = QUERYSTRINGPATTERN.search(path).group(1)
+    basepath    = QUERYSTRINGPATTERN.sub('', basepath)
+    path        = QUERYSTRINGPATTERN.sub('', path)
+  elif QUERYSTRINGPATTERN.search(baseurl):
     querystring = QUERYSTRINGPATTERN.search(baseurl).group(1)
+    basepath    = QUERYSTRINGPATTERN.sub('', basepath)
   else: querystring = ''
 
   if re.search(r'^\./', path):
     path = re.sub(r'^\./', '/', path)
-    return f"{host}{path}{querystring}"
+    return f'{protocol}://{host}{basepath or ""}{path}{querystring}'
   elif re.search(r'^/', path):
-    return f"{host}{path}{querystring}"
+    return f"{protocol}://{host}{path}{querystring}"
   else:
-    return f'{host}/{path}{querystring}'
+    return f'{protocol}://{host}{basepath or ""}/{path}{querystring}'
 
 def isroot(url:str) -> bool:
   if re.match('/', url): return True
