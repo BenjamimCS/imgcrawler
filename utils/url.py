@@ -30,7 +30,7 @@ def getprotocol(url:str) -> str:
   protocol = re.match(URLSCHEMEREGEX, url, re.IGNORECASE)
   return protocol.group(1)
 
-def makeurl(baseurl:str, path:str, protocol:str = 'https') -> str | None:
+def makeurl(baseurl:str, path:str, protocol:str = '') -> str | None:
   """
   Produce an URL with *path* if *baseurl* exits. Return None instead
   :baseurl -> str: the reference URL
