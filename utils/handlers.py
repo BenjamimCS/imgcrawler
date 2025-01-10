@@ -82,15 +82,17 @@ def makerequest(*args,sources:tuple[str]|list[str]|str=(), output:str="", log:bo
 def readfile(*args,report:bool=False, reportmsg:dict[str, (dict[str, str], Callable)]=readfileoptions, **kwargs):
   """
   open's functon wrapper. Handles possible exceptions
-  :*args: positional arguments
-  :*report* -> bool: enable logging
-  :*reportmsg* -> dict: for custom logging message
+  :*args: positional arguments for `open`
+  :**kwargs: optional arguments for `open`
+  :report -> bool: enable logging
+  :reportmsg -> dict: for custom logging message
     It stores two keys: 'success' and 'failure'
     'success' -> Callable: report success accordingly with the current operation (reading, writing etc.)
     'failure' -> [dict,str]:
+      'default'
       'filenotfound'
       'default'
-  :**kwargs: keyowrd arguments
+      'typeerror'
   """
   import io
   # reportmsg = {**readfileoptions, **reportmsg} a way to update readfileoptions' keys' values
