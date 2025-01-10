@@ -5,6 +5,11 @@ __all__ = ['makerequest', 'readfile']
 
 def _reportget(response, filename:str): pass
 
+def _reportsuccessloadfile(filename:str, mode:str='r'):
+  import os
+  if 'rw' in mode: pass
+  if 'r'  in mode: print(f'\033[32m=> {os.path.basename(filename)} fully loaded\033[0m')
+  if 'w'  in mode: pass
 
 readfileoptions = {
   'failure': {
