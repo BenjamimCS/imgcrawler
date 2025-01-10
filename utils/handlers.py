@@ -5,7 +5,7 @@ __all__ = ['makerequest', 'readfile']
 
 def _reportget(response, filename:str): pass
 
-def _reportsuccessloadfile(filename:str, mode:str='r'):
+def _reportsuccessreadfile(filename:str, mode:str='r'):
   import os
   if 'rw' in mode: pass
   if 'r'  in mode: print(f'\033[32m=> {os.path.basename(filename)} fully loaded\033[0m')
@@ -18,7 +18,7 @@ _readfileoptions = {
     'default': '\033[31m=> Unhandled \033[34mOSError\033[0m',
     'typeerorr': '\033[31=> No function for reportmsg["success"]\033[0m'
   },
-  'success': lambda: print('\033[32m=> File found]')
+  'success': _reportsuccessreadfile
 }
 
 makerequestoptions = {
@@ -104,7 +104,7 @@ def readfile(*args,report:bool=False, reportmsg:dict[str, (dict[str, str], Calla
   # reportmsg = {**readfileoptions, **reportmsg} a way to update readfileoptions' keys' values
   try:
     file =  open(*args,**kwargs)
-    if report: reportmsg['success']()
+    if report: reportmsg['success'](*args, **kwargs)
     return file
   except FileNotFoundError:
     if report: print(reportmsg['failure']['filenotfound'])
