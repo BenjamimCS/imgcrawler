@@ -8,6 +8,7 @@ def _reportget(response, filename:str): pass
 
 readfileoptions = {
   'failure': {
+    'default': '\033[31m=> An error ocurred while reading/writing the file\033[0m',
     'filenotfound': '\033[31m=> File not found\033[0m',
     'default': '\033[31m=> Unhandled \033[34mOSError\033[0m',
     'typeerorr': '\033[31=> No function for reportmsg["success"]\033[0m'
