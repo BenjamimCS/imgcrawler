@@ -25,9 +25,9 @@ makerequestoptions = {
 def makerequest(*args,sources:tuple[str]|list[str]|str=(), output:str="", log:bool=True, **kwargs):
   """
   Requests's module wrapper. Handles possible exceptions
-  :sources -> tuple[str] | list[str]:
-  :output -> str:
-  :log -> str:
+  :sources -> tuple[str] | list[str]: URLs for request
+  :output -> str: directory to store donwloaded files
+  :log -> bool: report download progress
   """
   import requests
   try:
