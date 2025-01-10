@@ -63,11 +63,21 @@ def makerequest(*args,sources:tuple[str]|list[str]|str=(), output:str="", log:bo
         response = requests.get(url, stream=log)
         with open(f'{output}/{filebasename}', "ab+") as file:
           file.write(response.content)
-  except requests.exceptions.ConnectTimeout: pass
-  except requests.exceptions.ConnectionError: pass
-  except requests.exceptions.HTTPError: pass
-  except requests.exceptions.Timeout: pass
-  except Exception: pass
+  except requests.exceptions.ConnectTimeout as error:
+    print(f'\33[31m=> The request timed out while trying to connect to the remote server\n\33[0m   {error}')
+    exit(1)
+  except requests.exceptions.ConnectionError as error:
+    print(f'\33[31m=> A connection error ocurred\n\33[0m   {error}')
+    exit(1)
+  except requests.exceptions.HTTPError as error:
+    print(f'\33[31m=> An HTTP error has ocurred\n\33[0m   {error}')
+    exit(1)
+  except requests.exceptions.Timeout as error:
+    print(f'\33[31m=> The request timed out\n\33[0m   {error}')
+    exit(1)
+  except Exception as error:
+    print(error)
+    exit(2)
 
 def readfile(*args,report:bool=False, reportmsg:dict[str, (dict[str, str], Callable)]=readfileoptions, **kwargs):
   """
