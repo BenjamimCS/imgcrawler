@@ -11,7 +11,7 @@ def _reportsuccessloadfile(filename:str, mode:str='r'):
   if 'r'  in mode: print(f'\033[32m=> {os.path.basename(filename)} fully loaded\033[0m')
   if 'w'  in mode: pass
 
-readfileoptions = {
+_readfileoptions = {
   'failure': {
     'default': '\033[31m=> An error ocurred while reading/writing the file\033[0m',
     'filenotfound': '\033[31m=> File not found\033[0m',
@@ -85,7 +85,7 @@ def makerequest(*args,sources:tuple[str]|list[str]|str=(), output:str="", log:bo
     print(error)
     exit(2)
 
-def readfile(*args,report:bool=False, reportmsg:dict[str, (dict[str, str], Callable)]=readfileoptions, **kwargs):
+def readfile(*args,report:bool=False, reportmsg:dict[str, (dict[str, str], Callable)]=_readfileoptions, **kwargs):
   """
   open's functon wrapper. Handles possible exceptions
   :*args: positional arguments for `open`
