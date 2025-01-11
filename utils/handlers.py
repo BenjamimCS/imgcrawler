@@ -7,17 +7,18 @@ def _reportget(response, filename:str): pass
 
 def _reportsuccessreadfile(filename:str, mode:str='r'):
   import os
-  if 'rw' in mode: pass
-  if 'r'  in mode: print(f'\033[32m=> {os.path.basename(filename)} fully loaded\033[0m')
-  if 'w'  in mode: pass
+  if   'rw' in mode: pass
+  elif 'r'  in mode: print(f'\033[32m=> \33[33m{os.path.basename(filename)}\33[32m fully loaded\033[0m')
+  elif 'w'  in mode: pass
+
+def _reportfailurereadfile(filename:str, errortype='default'):
+  match errortype:
+    case 'filenotfound': print(f'\33[31m=> \33[33m{filename}\33[31m: file not found\33[0m')
+    case 'typeerror':    print(f'\33[31m=> \33[33m{filename}\33[31m: no function for reportmsg["success"]\33[0m')
+    case _:              print(f'\33[31m=> \33[33m{filename}\33[31m: an error ocurred while reading/writing the file\33[0m')
 
 _readfileoptions = {
-  'failure': {
-    'default': '\033[31m=> An error ocurred while reading/writing the file\033[0m',
-    'filenotfound': '\033[31m=> File not found\033[0m',
-    'default': '\033[31m=> Unhandled \033[34mOSError\033[0m',
-    'typeerorr': '\033[31=> No function for reportmsg["success"]\033[0m'
-  },
+  'failure': _reportfailurereadfile,
   'success': _reportsuccessreadfile
 }
 
@@ -107,14 +108,14 @@ def readfile(*args,report:bool=False, reportmsg:dict[str, (dict[str, str], Calla
     if report: reportmsg['success'](*args, **kwargs)
     return file
   except FileNotFoundError:
-    if report: print(reportmsg['failure']['filenotfound'])
+    if report: reportmsg['failure'](*args, errortype='filenotfound')
     return io.StringIO("{}")
   except OSError:
-    if report: print(reportmsg['failure']['default'])
+    if report: reportmsg['failure'](*args)
     exit(1)
   except TypeError:
-    if report: print(reportmsg['failure']['typeerror'])
+    if report: reportmsg['failure'](*args, errortype='typeerror')
     exit(1)
   except Exception:
-    print(reportmsg['failure']['default'])
+    if report: reportmsg['failure'](*args)
     exit(1)
