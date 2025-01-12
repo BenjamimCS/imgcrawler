@@ -54,6 +54,7 @@ def makeurl(baseurl:str, path:str, protocol:str = '') -> str | None:
 
   if protocol:
     baseurl = re.sub(r'^\w+:', f'{protocol}:', baseurl)
+  else: protocol = 'https'
 
   if re.search(r'^\./', path):
     path = re.sub(r'^\./', '/', path)
