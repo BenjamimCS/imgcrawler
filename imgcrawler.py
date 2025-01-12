@@ -31,7 +31,7 @@ config = {
   'attr': 'src'
 }
 
-with readfile('setup.json', mode='rb') as json_file:
+with readfile('setup.json', mode='rb', report=True) as json_file:
   config = {**config,**json.load(json_file)}
 
 site         = (input("Website: ")       or config['site']) # input("Website: ")
@@ -44,7 +44,7 @@ local_file   = config['local_file']
 attr         = config['attr']
 
 if local:
-  with readfile(config['local_file'], 'rb') as html:
+  with readfile(config['local_file'], 'rb', report=True) as html:
     dom = BeautifulSoup(html, 'html.parser')
 else:
   response = makerequest(site)
