@@ -54,7 +54,7 @@ def makeurl(baseurl:str, path:str, protocol:str = '') -> str | None:
 
   if protocol:
     baseurl = re.sub(r'^\w+:', f'{protocol}:', baseurl)
-  host = os.path.dirname(baseurl)
+
   if re.search(r'^\./', path):
     path = re.sub(r'^\./', '/', path)
     return f'{protocol}://{host}{basepath or ""}{path}{querystring}'
